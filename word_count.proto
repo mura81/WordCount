@@ -1,0 +1,48 @@
+syntax = "proto3";
+
+package wordcount;
+
+service DistributedWordCount {
+  rpc BroadcastNodeCounts(NodeCounts) returns (Empty) {}
+  rpc AssignRange(LetterRange) returns (Empty) {}
+  rpc MulticastLine(DocumentLine) returns (Empty) {}
+  rpc SubmitCounts(WordCounts) returns (Empty) {}
+  rpc SubmitValidatedCounts(WordCounts) returns (Empty) {}
+  rpc EndDocument(Empty) returns (Empty) {}
+  rpc RegisterNode(NodeInfo) returns (Empty) {}
+}
+
+message NodeCounts {
+  int32 proposers = 1;
+  int32 acceptors = 2;
+  int32 learners = 3;
+  repeated string acceptor_addresses = 4;
+  repeated string learner_addresses = 5;
+}
+
+message LetterRange {
+  string start_letter = 1;
+  string end_letter = 2;
+  string proposer_id = 3;
+}
+
+message DocumentLine {
+  string content = 1;
+}
+
+message WordCounts {
+  string proposer_id = 1;
+  map<string, WordCount> counts = 2;
+}
+
+message WordCount {
+  int32 count = 1;
+  repeated string words = 2;
+}
+
+message Empty {}
+
+message NodeInfo {
+  string role = 1;
+  string address = 2;
+}
